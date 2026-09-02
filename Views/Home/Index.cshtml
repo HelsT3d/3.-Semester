@@ -1,0 +1,29 @@
+﻿
+@section title{
+
+    <h1>
+        Welcome to Movie Mania!
+    </h1>
+}
+    <h5>
+        @{
+            var currentTime = DateTime.Now;
+        }
+        The current date and time is: @currentTime
+    </h5>
+    @if(currentTime.Hour < 12)
+    {
+        <p> Good morning!</p>
+    }
+    else
+    {
+        <p>Good afternoon! </p>
+    }
+    <br />
+    <ul>
+        <li>
+            <a href="/Movie/index">Movies</a>
+        </li>
+    </ul>
+
+ 

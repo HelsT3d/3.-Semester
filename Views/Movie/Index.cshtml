@@ -1,0 +1,33 @@
+﻿@using MovieMania.Models
+@model List<Movie>
+
+ 
+    @section title
+    {
+    <h1>Movies</h1>
+    }
+
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Release Year</th>
+                <th>Duration in Minutes</th>
+                <th>Description</th>
+                <th>Rating</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var movie in Model)
+            {
+                <tr>
+                    <td>@movie.Title</td>
+                    <td>@movie.ReleaseYear</td>
+                    <td>@movie.DurationInMinutes</td>
+                    <td>@movie.Description</td>
+                    <td>@movie.Rating</td>
+                </tr>
+            }
+        </tbody>
+    </table>

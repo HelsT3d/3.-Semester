@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using TimeSlot.Data;
 
 namespace TimeSlot.Models
 {
@@ -15,9 +18,11 @@ namespace TimeSlot.Models
 
         [Required]
         public DateTime EndTime { get; set; }
+        [ValidateNever]
+        public ApplicationUser ApplicationUsers { get; set; } = null;
 
-
-
+        [Required]
+        public string UsersId { get; set; } = string.Empty;
 
         [Required]
         [Display(Name = "Room")]

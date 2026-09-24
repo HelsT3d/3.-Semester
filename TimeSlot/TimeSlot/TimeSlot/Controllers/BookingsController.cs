@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using TimeSlot.Data;
 using TimeSlot.Models;
 using TimeSlot.Persistence;
 using TimeSlot.Services;
@@ -10,8 +12,12 @@ namespace TimeSlot.Controllers
     {
         private readonly IRoomRepository _roomRepository;
         private readonly BookingService _bookingService;
-        public BookingsController(BookingService bookingService, IRoomRepository roomRepository)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+
+        public BookingsController(BookingService bookingService, IRoomRepository roomRepository, UserManager<ApplicationUser> userManager )
         {
+            _userManager = userManager;
             _bookingService = bookingService;
             _roomRepository = roomRepository;
         }
@@ -19,8 +25,16 @@ namespace TimeSlot.Controllers
 
         public IActionResult Index()
         {
-            // Use the instance field instead of static access
-            var bookings = _bookingService.GetAll();
+            var userId = _userManager.GetUserId(User);
+
+            if (userId == null)
+                return Challenge();
+
+            var bookings = _bookingService
+                .GetAll()
+                .Where(b => b.UsersId == userId)
+                .ToList();
+
             return View(bookings);
         }
 
@@ -44,6 +58,16 @@ namespace TimeSlot.Controllers
         [HttpPost]
         public IActionResult Add(BookingViewModel bookingVM)
         {
+            var userId = _userManager.GetUserId(User);
+
+            if (userId == null)
+                return Challenge();
+
+            bookingVM.Booking.UsersId = userId;
+
+            // Fjern den gamle ModelState-fejl for UsersId
+            ModelState.Remove("Booking.UsersId");
+
             if (!ModelState.IsValid)
             {
                 bookingVM.Rooms = _roomRepository.GetAll();
@@ -62,14 +86,25 @@ namespace TimeSlot.Controllers
                 ModelState.AddModelError(string.Empty, ex.Message);
                 bookingVM.Rooms = _roomRepository.GetAll();
                 ViewBag.Action = "add";
+
                 return View(bookingVM);
             }
         }
 
         public IActionResult Edit(int? id)
         {
+            var userId = _userManager.GetUserId(User);
+
+            if (userId == null)
+                return Challenge();
+
             var booking = _bookingService.GetById(id ?? 0);
-            if (booking == null) return NotFound();
+
+            if (booking == null)
+                return NotFound();
+
+            if (booking.UsersId != userId)
+                return Forbid();
 
             BookingViewModel bookingVM = new BookingViewModel
             {
@@ -78,7 +113,6 @@ namespace TimeSlot.Controllers
             };
 
             ViewBag.Action = "edit";
-
             return View(bookingVM);
         }
         [HttpPost]
@@ -109,6 +143,19 @@ namespace TimeSlot.Controllers
 
         public IActionResult Delete(int id)
         {
+            var userId = _userManager.GetUserId(User);
+
+            if (userId == null)
+                return Challenge();
+
+            var booking = _bookingService.GetById(id);
+
+            if (booking == null)
+                return NotFound();
+
+            if (booking.UsersId != userId)
+                return Forbid();
+
             _bookingService.Delete(id);
 
             return RedirectToAction("Index");

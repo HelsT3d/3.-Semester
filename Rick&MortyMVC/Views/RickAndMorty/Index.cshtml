@@ -1,0 +1,27 @@
+﻿@model Character
+
+<div>
+    <form asp-controller="RickAndMorty" asp-action="GetActionResultAsync" method="post">
+        @Html.AntiForgeryToken()
+
+        <input type="number" name="id" placeholder="Enter Id" />
+
+        <button type="submit">Search</button>
+
+    </form>
+
+    @if (Model.Id != null)
+    {
+        <h1>@Model.Name</h1>
+        <h2>@Model.Status</h2>
+        <h3>@Model.Species</h3>
+        <h3>@Model.Type</h3>
+        <h3>@Model.Gender</h3>
+        <img src="@Model.Image" />
+    }
+
+    @if (ViewBag.Message != null)
+    {
+        <h1>@ViewBag.Message</h1>
+    }
+</div>

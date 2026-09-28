@@ -3,6 +3,7 @@ using TimeSlot.Data;
 using TimeSlot.Persistence;
 using TimeSlot.Services;
 using Microsoft.AspNetCore.Identity;
+using TimeSlot.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,11 +14,26 @@ builder.Services.AddDbContext<TimeSlotContext>
 
 builder.Services.AddDefaultIdentity<ApplicationUser>
     (options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<TimeSlotContext>();
 builder.Services.AddScoped<IBookingRepository,BookingRepository>();
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 builder.Services.AddScoped<BookingService>();
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    UserManager<ApplicationUser> userManager = scope.ServiceProvider
+        .GetRequiredService<UserManager<ApplicationUser>>();
+
+    var admin = await userManager.FindByEmailAsync("admin@company.com");
+
+    if (admin != null && !await userManager.IsInRoleAsync(admin, "Admin"))
+    {
+        await userManager.AddToRoleAsync(admin, "Admin");
+    }
+}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

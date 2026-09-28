@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TimeSlot.Data;
 using TimeSlot.Models;
@@ -10,6 +11,7 @@ namespace TimeSlot.Controllers
 {
     public class BookingsController : Controller
     {
+
         private readonly IRoomRepository _roomRepository;
         private readonly BookingService _bookingService;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -21,10 +23,23 @@ namespace TimeSlot.Controllers
             _bookingService = bookingService;
             _roomRepository = roomRepository;
         }
-
-
-        public IActionResult Index()
+      
+        public async Task<IActionResult> AsignAdminRoleAsync()
         {
+           
+            var admin = await _userManager.FindByEmailAsync("admin@company.com");
+            if (admin != null)
+            {
+                await _userManager.AddToRoleAsync(admin, "Admin");
+            }
+            return RedirectToAction("Index");
+        }
+
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Index()
+        {
+
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
@@ -55,6 +70,7 @@ namespace TimeSlot.Controllers
 
             return View(bookingVM);
         }
+
         [HttpPost]
         public IActionResult Add(BookingViewModel bookingVM)
         {
@@ -115,6 +131,8 @@ namespace TimeSlot.Controllers
             ViewBag.Action = "edit";
             return View(bookingVM);
         }
+
+     
         [HttpPost]
         public IActionResult Edit(BookingViewModel bookingVM)
         {

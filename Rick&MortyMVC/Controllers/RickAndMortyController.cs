@@ -34,7 +34,17 @@ namespace Rick_MortyMVC.Controllers
             return View("Index", characterById);
             
         }
-        
+        [HttpGet ("/RickAndMorty/GetAllCharactersAsync")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GetAllCharactersAsync()
+        {
+            List<Character>? characters = await _rickAndMortyHttpService.GetAllCharactersAsync();
+            // Call FirstOrDefault(), and provide a fallback to a new Character if null
+            return View("Index", characters.FirstOrDefault());
+        }
+
+
+
     }
 }
     

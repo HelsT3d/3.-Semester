@@ -7,9 +7,13 @@
         <input type="number" name="id" placeholder="Enter Id" />
 
         <button type="submit">Search</button>
-
+     
     </form>
-
+    <form asp-controller ="RickAndMorty" asp-action="GetAllCharactersAsync" method="post">
+           
+        
+            <button type="button">Get all characters</button>
+    </form>
     @if (Model.Id != null)
     {
         <h1>@Model.Name</h1>
@@ -24,4 +28,7 @@
     {
         <h1>@ViewBag.Message</h1>
     }
+
+    
+
 </div>

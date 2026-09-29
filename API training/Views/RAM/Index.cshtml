@@ -1,0 +1,23 @@
+﻿@model Character
+
+<form asp-controller="RAM" asp-action="GetActionResult" method="get">
+    <input type="number" name="id" placeholder="Enter Id" />
+</form>
+<form asp-controller="RAM" asp-action="GetAllCharacterResults" method="get">
+    <button type="submit"> Get all characters</button>
+</form>
+@if (Model.Id != null)
+{
+    <h1>@Model.Name</h1>
+    <h2>@Model.Status</h2>
+    <h3>@Model.Species</h3>
+    <h3>@Model.Type</h3>
+    <h3>@Model.Gender</h3>
+    <img src="@Model.Image" />
+}
+
+
+@if (ViewBag.Message != null)
+{
+    <h1>@ViewBag.Message</h1>
+}

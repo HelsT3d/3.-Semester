@@ -29,6 +29,20 @@ namespace Rick_MortyMVC.Services
                 return null;
             }
         }
+        public async Task<List<Character>?> GetAllCharactersAsync()
+        {
+            using HttpClient httpClient = _rickAndMortyHttpFactory.CreateClient("RickAndMortyHttpClient");
+            try
+            {
+                return await httpClient.GetFromJsonAsync<List<Character>?>($"/api/character");
+
+            }
+            catch (HttpRequestException)
+            {
+
+                return null;
+            }
+        }
 
     }
 

@@ -1,0 +1,20 @@
+﻿@model List<Character>
+
+<h1>All Characters</h1>
+
+<p>Antal characters: @Model.Count</p>
+
+@foreach (Character character in Model)
+{
+    <div>
+        <h2>@character.Name</h2>
+        <p>ID: @character.Id</p>
+        <p>Status: @character.Status</p>
+        <p>Species: @character.Species</p>
+        <p>Gender: @character.Gender</p>
+
+        <img src="@character.Image" width="150" />
+    </div>
+
+    <hr />
+}

@@ -5,10 +5,10 @@ namespace Rick_MortyMVC.Services
     public interface IRickAndMortyHttpService
     {
         Task<Character?> GetCharacterByIdAsync(int id);
-        
+        Task<List<Character>?> GetAllCharactersAsync();
 
 
 
-        
+
     }
 }

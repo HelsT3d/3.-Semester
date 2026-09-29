@@ -10,7 +10,7 @@ namespace Rick_MortyMVC
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddHttpClient("RickAndMortyHttpClient", httpClient =>
+            builder.Services.AddHttpClient("RickAndMortyHttpClient", (httpClient) =>
             {
                 httpClient.BaseAddress = new Uri("https://rickandmortyapi.com");
             });

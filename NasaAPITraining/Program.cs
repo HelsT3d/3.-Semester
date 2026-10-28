@@ -1,3 +1,5 @@
+using NasaAPITraining.Services;
+
 namespace NasaAPITraining
 {
     public class Program
@@ -8,6 +10,11 @@ namespace NasaAPITraining
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddHttpClient("NasaHttpClient", (httpCLient) =>
+            {
+                httpCLient.BaseAddress = new Uri("https://science.nasa.gov/wp-json/wp/v2/");
+            });
+            builder.Services.AddScoped<INasaHttpService, NasaHttpService>();
 
             var app = builder.Build();
 

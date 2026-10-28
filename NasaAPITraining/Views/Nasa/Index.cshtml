@@ -1,0 +1,21 @@
+﻿@model APOD
+<div>
+    <form asp-controller="Nasa" asp-action="GetActionResult" method="get">
+        <input type="text" name="id" placeholder="Enter post ID"/>
+</form>
+</div>
+<div>
+    @if (Model.post_id != null)
+    {
+        <h1>@Model.title</h1>
+        <h3>@Model.permalink</h3>
+        <h3>@Model.explanation</h3>
+        <h3>@Model.media_type</h3>
+        <h3>@Model.date</h3>
+    }
+    @if (ViewBag.Message != null)
+    {
+        <h1>@ViewBag.Message</h1>
+    }
+</div>
+

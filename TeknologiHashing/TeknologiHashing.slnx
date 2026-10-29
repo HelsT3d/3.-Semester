@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="../TeknologiSimpleHashing/TeknologiSimpleHashing.csproj" />
+  <Project Path="../TeknologiSimpleHashingSalted/TeknologiSimpleHashingSalted.csproj" />
+  <Project Path="TeknologiCaesarCipher.csproj" />
+</Solution>
